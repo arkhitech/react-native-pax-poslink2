@@ -53,6 +53,12 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
+  sourceSets{
+        main{
+            jniLibs.srcDirs=['libs', 'libs/jniLibs']
+        }
+    }
+
 }
 
 repositories {
@@ -66,13 +72,21 @@ dependencies {
   // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
-    implementation files('libs/PAX_POSLinkAndroid_20220818.jar')
+    // implementation files('libs/PAX_POSLinkAndroid_20220818.jar')
+
+        implementation fileTree(dir: 'libs', include: '*.jar')
+//    implementation files('libs/GLComm_V1.10.00_20220421.jar')
+//    implementation files('libs/jsch-0.1.54.jar')
+//    implementation files('libs/PaxLog_1.0.9_20220224.jar')
+//    implementation files('libs/POSLink_Admin_Android_Plugin_V2.00.00_20220805.jar')
+//    implementation files('libs/POSLink_Core_Android_V2.00.00_20220805.jar')
+//    implementation files('libs/POSLink_Semi_Android_Plugin_V2.00.00_20220805.jar')
 }
 
 if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
-    libraryName = "PaxPoslink"
-    codegenJavaPackageName = "com.paxposlink"
+    libraryName = "PaxPoslink2"
+    codegenJavaPackageName = "com.paxposlink2"
   }
 }
