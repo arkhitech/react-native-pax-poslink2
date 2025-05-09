@@ -1,17 +1,17 @@
-# react-native-pax-poslink
+# react-native-pax-poslink2
 
 React Native (Only Android) library to integrate with pax devices using POSLink SDK
 
 ## Installation
 
 ```sh
-npm install react-native-pax-poslink
+npm install react-native-pax-poslink2
 ```
 
 ## Usage
 
 ```js
-import { initPOSLink, makePayment } from 'react-native-pax-poslink';
+import { initPOSLink, makePayment } from 'react-native-pax-poslink2';
 
 // ...
 ```

@@ -11,17 +11,16 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import java.util.Map;
 import java.util.HashMap;
-import com.pax.poslink.CommSetting;
 import com.pax.poscore.commsetting.AidlSetting;
-import com.pax.poslink.POSLinkAndroid; //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
+// import com.pax.poslink.POSLinkAndroid; //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
 import com.pax.poscore.LogSetting;
-import com.pax.poslink.PosLink;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
-import com.pax.poslink.PaymentRequest;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
-import com.pax.poslink.ProcessTransResult;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
-import com.pax.poslink.PaymentResponse;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
-import com.pax.poslink.BatchRequest;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
-import com.pax.poslink.BatchResponse;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
-import com.pax.poslink.CommSetting;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
+// import com.pax.poslink.PosLink;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
+// import com.pax.poslink.PaymentRequest;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
+// import com.pax.poslink.ProcessTransResult;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
+// import com.pax.poslink.PaymentResponse;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
+// import com.pax.poslink.BatchRequest;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
+// import com.pax.poslink.BatchResponse;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
+// import com.pax.poslink.CommSetting;  //TODO: NEED TO FIX IMPORT FOR POSLinkAndroid
 import android.os.HandlerThread;
 import android.os.Handler;
 import android.os.Looper;
@@ -32,7 +31,7 @@ import android.content.Context;
 @ReactModule(name = PaxPoslink2Module.NAME)
 public class PaxPoslink2Module extends ReactContextBaseJavaModule {
   public static final String NAME = "PaxPoslink2";
-  private PosLink poslink;
+//  private PosLink poslink;
   private HandlerThread handlerThread;
   private Context context;
 
@@ -49,12 +48,6 @@ public class PaxPoslink2Module extends ReactContextBaseJavaModule {
     return NAME;
   }
 
-  // Example method
-  // See https://reactnative.dev/docs/native-modules-android
-  @ReactMethod
-  public void multiply(double a, double b, Promise promise) {
-    promise.resolve(a * b);
-  }
 
   @ReactMethod
   public void initPOSLink(String type, String timeout, Boolean proxy, String ip, String port, Promise promise) {
