@@ -25,10 +25,9 @@ import com.pax.poslinksemiintegration.transaction.DoCashResponse
 import com.pax.poslinksemiintegration.transaction.DoCreditRequest
 import com.pax.poslinksemiintegration.transaction.DoCreditResponse
 import com.pax.poslinksemiintegration.util.TraceRequest
-import com.paxposlink2.PaxPoslink2Module
 
-@ReactModule(name = PaxPoslink2Module.NAME)
-class PaxPoslink2Module(reactContext: ReactApplicationContext) :
+@ReactModule(name = PaxPoslink2PaymentModule.NAME)
+class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
     private var poslink: POSLinkSemi? = null
     private val handlerThread: HandlerThread? = null
@@ -59,7 +58,7 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
 
             poslink = POSLinkSemi.getInstance()
             poslink!!.setLogSetting(logSetting)
-            initPaymentCommunication(type!!, timeout, nameOrMac, ipOrSerial, portOrBaud, promise)
+            initPaymentCommunication(type, timeout, nameOrMac, ipOrSerial, portOrBaud, promise)
         } catch (e: Exception) {
             promise.reject("Exception Error", e)
         }
@@ -76,7 +75,6 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
     ) {
         // Setting connection configurations
         when (type) {
-            "AIDL" -> {}
             "TCP" -> {
                 val tcpSetting = TcpSetting(ipOrSerial, portOrBaud, timeout)
                 this.communicationSetting = tcpSetting
@@ -136,9 +134,7 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
         doCreditRequest.amountInformation = amountRequest
         doCreditRequest.traceInformation = traceRequest
 
-        var executionResult: ExecutionResult<DoCreditResponse>? = null
-
-        executionResult = terminal.transaction.doCredit(doCreditRequest)
+        var executionResult: ExecutionResult<DoCreditResponse> = terminal.transaction.doCredit(doCreditRequest)
 
         this.handleCreditExecutionResult(executionResult, promise)
     }
@@ -407,6 +403,6 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
     }
 
     companion object {
-        const val NAME: String = "PaxPoslink2"
+        const val NAME: String = "PaxPoslink2Payment"
     }
 }
