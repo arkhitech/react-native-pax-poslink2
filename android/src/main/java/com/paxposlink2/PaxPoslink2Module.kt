@@ -42,8 +42,8 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun initPOSLink(
-        type: String?,
-        timeout: String?,
+        type: String,
+        timeout: Int,
         nameOrMac: String?,
         ipOrSerial: String?,
         portOrBaud: String?,
@@ -55,11 +55,11 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
             logSetting.level = LogSetting.LogLevel.DEBUG // Set log level
             logSetting.fileName = "POSLinkLog" // Set the file name of output log
             logSetting.filePath = "sdcard/log" // Set path for output log
-            logSetting.setDays("30") // Keep log for 30 days
+            logSetting.setDays(30) // Keep log for 30 days
 
             poslink = POSLinkSemi.getInstance()
-            poslink.setLogSetting(logSetting)
-            initPaymentCommunication(type, timeout, nameOrMac, ipOrSerial, portOrBaud, promise)
+            poslink!!.setLogSetting(logSetting)
+            initPaymentCommunication(type!!, timeout, nameOrMac, ipOrSerial, portOrBaud, promise)
         } catch (e: Exception) {
             promise.reject("Exception Error", e)
         }
@@ -68,7 +68,7 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun initPaymentCommunication(
         type: String,
-        timeout: String?,
+        timeout: Int,
         nameOrMac: String?,
         ipOrSerial: String?,
         portOrBaud: String?,
@@ -160,36 +160,36 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
         doCashRequest.traceInformation = traceRequest
 
         val executionResult: ExecutionResult<DoCashResponse> =
-            terminal.transaction.doCredit(doCreditRequest)
+            terminal.transaction.doCash(doCashRequest)
 
         this.handleCashExecutionResult(executionResult, promise)
     }
 
-    fun makeReturnPayment(
-        amount: String?,
-        tip: String?,
-        referenceNumber: String?,
-        promise: Promise
-    ) {
-        val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
-
-        val amountRequest = AmountRequest()
-        amountRequest.transactionAmount = amount
-        amountRequest.tipAmount = tip
-
-        val traceRequest = TraceRequest()
-        traceRequest.ecrReferenceNumber = referenceNumber
-
-        val doCashRequest = DoCashRequest()
-        doCashRequest.transactionType = TransactionType.SALE
-        doCashRequest.amountInformation = amountRequest
-        doCashRequest.traceInformation = traceRequest
-
-        val executionResult: ExecutionResult<DoCashResponse> =
-            terminal.transaction.doCredit(doCreditRequest)
-
-        this.handleCashExecutionResult(executionResult, promise)
-    }
+//    fun makeReturnPayment(
+//        amount: String?,
+//        tip: String?,
+//        referenceNumber: String?,
+//        promise: Promise
+//    ) {
+//        val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
+//
+//        val amountRequest = AmountRequest()
+//        amountRequest.transactionAmount = amount
+//        amountRequest.tipAmount = tip
+//
+//        val traceRequest = TraceRequest()
+//        traceRequest.ecrReferenceNumber = referenceNumber
+//
+//        val doCashRequest = DoCashRequest()
+//        doCashRequest.transactionType = TransactionType.SALE
+//        doCashRequest.amountInformation = amountRequest
+//        doCashRequest.traceInformation = traceRequest
+//
+//        val executionResult: ExecutionResult<DoCashResponse> =
+//            terminal.transaction.doCash(doCashRequest)
+//
+//        this.handleCashExecutionResult(executionResult, promise)
+//    }
 
     private fun handleCreditExecutionResult(
         executionResult: ExecutionResult<DoCreditResponse>,
@@ -223,14 +223,14 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
                 "CurrentAccountNumber",
                 doCreditResponse.accountInformation().currentAccountNumber()
             )
-            map.putString("CardType", doCreditResponse.accountInformation().cardType())
+            map.putString("CardType", doCreditResponse.accountInformation().cardType().getName())
             map.putString(
                 "CvdApprovalCode",
                 doCreditResponse.accountInformation().cvdApprovalCode()
             )
             map.putString(
                 "DebitAccountType",
-                doCreditResponse.accountInformation().debitAccountType()
+                doCreditResponse.accountInformation().debitAccountType().getName()
             )
             map.putString("ECRTransID", doCreditResponse.hostTraceInformation().ecrTransactionId())
             map.putString("EDCType", doCreditResponse.edcType())
@@ -239,7 +239,7 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
                 "GatewayTransactionID",
                 doCreditResponse.hostInformation().gatewayTransactionId()
             )
-            map.putString("GiftCardType", doCreditResponse.accountInformation().giftCardType())
+            map.putString("GiftCardType", doCreditResponse.accountInformation().giftCardType().getName())
             map.putString("ReferenceNumber", doCreditResponse.traceInformation().referenceNumber())
             map.putString("HostCardType", doCreditResponse.accountInformation().hostCardType())
             map.putString("HostResponseCode", doCreditResponse.hostInformation().hostResponseCode())
@@ -336,7 +336,7 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
 //      map.putString("CvdApprovalCode", doCashResponse.accountInformation().cvdApprovalCode());
 //      map.putString("DebitAccountType", doCashResponse.accountInformation().debitAccountType());
             map.putString("ECRTransID", doCashResponse.hostTraceInformation().ecrTransactionId())
-            map.putString("EDCType", doCashResponse.edcType())
+//            map.putString("EDCType", doCashResponse.edcType())
             //      map.putString("ExtraBalance", doCreditResponse.amountInformation().ExtraBalance);
             map.putString(
                 "GatewayTransactionID",

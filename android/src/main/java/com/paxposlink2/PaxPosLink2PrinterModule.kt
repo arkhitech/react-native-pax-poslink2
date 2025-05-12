@@ -8,8 +8,10 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.pax.poslink.peripheries.POSLinkPrinter
-import com.pax.poslink.peripheries.ProcessResult
+//import com.pax.poslink.peripheries.POSLinkPrinter
+//import com.pax.poslink.peripheries.ProcessResult
+import com.pax.poslinkperipheries.ProcessResult
+import com.pax.poslinkperipheries.printer.POSLinkPrinter
 
 class PaxPoslink2PrinterModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {

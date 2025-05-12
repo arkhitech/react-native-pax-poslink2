@@ -6,7 +6,9 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.pax.poslink.peripheries.POSLinkCashDrawer
+import com.pax.poslinkperipheries.cashdrawer.POSLinkCashDrawer
+
+//import com.pax.poslink.peripheries.POSLinkCashDrawer
 
 class PaxPoslink2CashDrawerModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
@@ -21,7 +23,7 @@ class PaxPoslink2CashDrawerModule(reactContext: ReactApplicationContext) :
         try {
             val posLinkCashDrawer = POSLinkCashDrawer.getInstance(this.context)
             val processResult = posLinkCashDrawer.open()
-            promise.resolve(processResult.code, processResult.message)
+            promise.resolve(processResult.message)
         } catch (e: Exception) {
             Log.e("PaxPOSLink", e.message!!)
             promise.reject("Exception", e.message)

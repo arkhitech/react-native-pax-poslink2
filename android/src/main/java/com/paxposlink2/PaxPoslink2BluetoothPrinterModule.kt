@@ -8,9 +8,13 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.pax.poslink.peripheries.POSLinkBluetoothPrinter
-import com.pax.poslink.peripheries.POSLinkPrinter
-import com.pax.poslink.peripheries.ProcessResult
+import com.pax.poslinkperipheries.ProcessResult
+import com.pax.poslinkperipheries.printer.POSLinkBluetoothPrinter
+import com.pax.poslinkperipheries.printer.POSLinkPrinter
+
+//import com.pax.poslink.peripheries.POSLinkBluetoothPrinter
+//import com.pax.poslink.peripheries.POSLinkPrinter
+//import com.pax.poslink.peripheries.ProcessResult
 
 class PaxPoslink2BluetoothPrinterModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
@@ -53,8 +57,7 @@ class PaxPoslink2BluetoothPrinterModule(reactContext: ReactApplicationContext) :
             val posLinkBluetoothPrinter = POSLinkBluetoothPrinter.getInstance(
                 this.context
             )
-            val isSync = false
-            posLinkBluetoothPrinter.print(bitmap, cutMode, printListener, isSync.toInt())
+            posLinkBluetoothPrinter.print(bitmap, cutMode, printListener)
         } catch (e: Exception) {
             Log.e("PaxPOSLink", e.message!!)
             promise.reject("Exception", e.message)

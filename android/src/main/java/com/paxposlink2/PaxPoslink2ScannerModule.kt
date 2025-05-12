@@ -7,8 +7,11 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.pax.poslink.entity.ScanResult
-import com.pax.poslink.peripheries.POSLinkScanner
+import com.pax.poslinkperipheries.scanner.POSLinkScanner
+import com.pax.poslinkperipheries.scanner.ScanResult
+
+//import com.pax.poslink.entity.ScanResult
+//import com.pax.poslink.peripheries.POSLinkScanner
 
 class PaxPoslink2ScannerModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
@@ -23,7 +26,7 @@ class PaxPoslink2ScannerModule(reactContext: ReactApplicationContext) :
         try {
             val posLinkScanner = POSLinkScanner.getPOSLinkScanner(this.context, scannerType)
             val processResult = posLinkScanner.open()
-            promise.resolve(processResult.code, processResult.message)
+            promise.resolve(processResult.message)
         } catch (e: Exception) {
             Log.e("PaxPOSLink", e.message!!)
             promise.reject("Exception", e.message)
@@ -35,7 +38,7 @@ class PaxPoslink2ScannerModule(reactContext: ReactApplicationContext) :
         try {
             val posLinkScanner = POSLinkScanner.getPOSLinkScanner(this.context, scannerType)
             val processResult = posLinkScanner.close()
-            promise.resolve(processResult.code, processResult.message)
+            promise.resolve(processResult.message)
         } catch (e: Exception) {
             Log.e("PaxPOSLink", e.message!!)
             promise.reject("Exception", e.message)
