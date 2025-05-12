@@ -59,8 +59,7 @@ class PaxPoslink2Module(reactContext: ReactApplicationContext) :
 
             poslink = POSLinkSemi.getInstance()
             poslink.setLogSetting(logSetting)
-
-            promise.resolve(true)
+            initPaymentCommunication(type, timeout, nameOrMac, ipOrSerial, portOrBaud, promise)
         } catch (e: Exception) {
             promise.reject("Exception Error", e)
         }
