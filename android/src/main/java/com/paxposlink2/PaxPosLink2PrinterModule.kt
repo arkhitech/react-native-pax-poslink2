@@ -13,16 +13,17 @@ import com.facebook.react.bridge.ReactMethod
 import com.pax.poslinkperipheries.ProcessResult
 import com.pax.poslinkperipheries.printer.POSLinkPrinter
 
+import com.paxposlink2.NativePaxPoslink2PrinterSpec
+
 class PaxPoslink2PrinterModule(reactContext: ReactApplicationContext) :
-    ReactContextBaseJavaModule(reactContext) {
+    NativePaxPoslink2PrinterSpec(reactContext) {
     private val context: Context = reactContext
 
     override fun getName(): String {
         return NAME
     }
 
-    @ReactMethod
-    fun printImageBase64(base64Image: String?, cutMode: Int, printWidth: Int, promise: Promise) {
+    override fun printImageBase64(base64Image: String, cutMode: Double, printWidth: Double, promise: Promise) {
         val printListener: POSLinkPrinter.PrintListener = object : POSLinkPrinter.PrintListener {
             override fun onSuccess() {
                 promise.resolve("success")
@@ -37,15 +38,14 @@ class PaxPoslink2PrinterModule(reactContext: ReactApplicationContext) :
 
         val posLinkPrinter = POSLinkPrinter.getInstance(this.context)
         val isSync = false
-        posLinkPrinter.setPrintWidth(printWidth)
-        posLinkPrinter.print(bitmap, cutMode, printListener, isSync)
+        posLinkPrinter.setPrintWidth(printWidth.toInt())
+        posLinkPrinter.print(bitmap, cutMode.toInt(), printListener, isSync)
     }
 
-    @ReactMethod
-    fun cutPaper(cutMode: Int, promise: Promise) {
+    override fun cutPaper(cutMode: Double, promise: Promise) {
         try {
             val posLinkPrinter = POSLinkPrinter.getInstance(this.context)
-            val response = posLinkPrinter.cutPaper(cutMode)
+            val response = posLinkPrinter.cutPaper(cutMode.toInt())
             promise.resolve("" + response)
         } catch (e: Exception) {
             Log.e("PaxPOSLink", e.message!!)

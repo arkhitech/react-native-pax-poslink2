@@ -26,9 +26,11 @@ import com.pax.poslinksemiintegration.transaction.DoCreditRequest
 import com.pax.poslinksemiintegration.transaction.DoCreditResponse
 import com.pax.poslinksemiintegration.util.TraceRequest
 
+import com.paxposlink2.NativePaxPoslink2PaymentSpec
+
 @ReactModule(name = PaxPoslink2PaymentModule.NAME)
 class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
-    ReactContextBaseJavaModule(reactContext) {
+    NativePaxPoslink2PaymentSpec(reactContext) {
     private var poslink: POSLinkSemi? = null
     private val handlerThread: HandlerThread? = null
     private var communicationSetting: CommunicationSetting? = null
@@ -39,10 +41,9 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
     }
 
 
-    @ReactMethod
-    fun initPOSLink(
+    override fun initPOSLink(
         type: String,
-        timeout: Int,
+        timeout: Double,
         nameOrMac: String?,
         ipOrSerial: String?,
         portOrBaud: String?,
@@ -64,10 +65,9 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
         }
     }
 
-    @ReactMethod
-    fun initPaymentCommunication(
+    override fun initPaymentCommunication(
         type: String,
-        timeout: Int,
+        timeout: Double,
         nameOrMac: String?,
         ipOrSerial: String?,
         portOrBaud: String?,
@@ -76,7 +76,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
         // Setting connection configurations
         when (type) {
             "TCP" -> {
-                val tcpSetting = TcpSetting(ipOrSerial, portOrBaud, timeout)
+                val tcpSetting = TcpSetting(ipOrSerial, portOrBaud, timeout.toInt())
                 this.communicationSetting = tcpSetting
             }
 
@@ -98,7 +98,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
             }
 
             "UART" -> {
-                val uartSetting = UartSetting(ipOrSerial, portOrBaud, timeout)
+                val uartSetting = UartSetting(ipOrSerial, portOrBaud, timeout.toInt())
                 this.communicationSetting = uartSetting
             }
 
@@ -113,8 +113,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
 //      }
     }
 
-    @ReactMethod
-    fun makeCreditPayment(
+    override fun makeCreditPayment(
         amount: String?,
         tip: String?,
         referenceNumber: String?,
@@ -139,8 +138,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
         this.handleCreditExecutionResult(executionResult, promise)
     }
 
-    @ReactMethod
-    fun makeCashPayment(amount: String?, tip: String?, referenceNumber: String?, promise: Promise) {
+    override fun makeCashPayment(amount: String?, tip: String?, referenceNumber: String?, promise: Promise) {
         val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
 
         val amountRequest = AmountRequest()

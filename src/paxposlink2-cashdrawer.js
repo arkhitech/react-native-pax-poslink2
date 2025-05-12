@@ -10,7 +10,7 @@ const PaxPoslink2CashDrawer = NativeModules.PaxPoslink2CashDrawer ? NativeModule
   }
 });
 
-export const setPaxBluetoothPrinterCashBoxStatus = () => (
+export const getPaxBluetoothPrinterCashBoxStatus = () => (
   PaxPoslink2CashDrawer.cashBoxStatus()
 );
 

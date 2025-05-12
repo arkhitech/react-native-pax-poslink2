@@ -8,18 +8,17 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.pax.poslinkperipheries.cashdrawer.POSLinkCashDrawer
 
-//import com.pax.poslink.peripheries.POSLinkCashDrawer
+import com.paxposlink2.NativePaxPoslink2CashDrawerSpec
 
 class PaxPoslink2CashDrawerModule(reactContext: ReactApplicationContext) :
-    ReactContextBaseJavaModule(reactContext) {
+    NativePaxPoslink2CashDrawerSpec(reactContext) {
     private val context: Context = reactContext
 
     override fun getName(): String {
         return NAME
     }
 
-    @ReactMethod
-    fun open(promise: Promise) {
+    override fun open(promise: Promise) {
         try {
             val posLinkCashDrawer = POSLinkCashDrawer.getInstance(this.context)
             val processResult = posLinkCashDrawer.open()
@@ -30,8 +29,7 @@ class PaxPoslink2CashDrawerModule(reactContext: ReactApplicationContext) :
         }
     }
 
-    @ReactMethod
-    fun cashBoxStatus(promise: Promise) {
+    override fun cashBoxStatus(promise: Promise) {
         try {
             val posLinkCashDrawer = POSLinkCashDrawer.getInstance(this.context)
             val status = posLinkCashDrawer.cashBoxStatus()

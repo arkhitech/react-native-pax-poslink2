@@ -10,19 +10,17 @@ import com.facebook.react.bridge.ReactMethod
 import com.pax.poslinkperipheries.scanner.POSLinkScanner
 import com.pax.poslinkperipheries.scanner.ScanResult
 
-//import com.pax.poslink.entity.ScanResult
-//import com.pax.poslink.peripheries.POSLinkScanner
+import com.paxposlink2.NativePaxPoslink2ScannerSpec
 
 class PaxPoslink2ScannerModule(reactContext: ReactApplicationContext) :
-    ReactContextBaseJavaModule(reactContext) {
+    NativePaxPoslink2ScannerSpec(reactContext) {
     private val context: Context = reactContext
 
     override fun getName(): String {
         return NAME
     }
 
-    @ReactMethod
-    fun open(scannerType: String?, promise: Promise) {
+    override fun open(scannerType: String?, promise: Promise) {
         try {
             val posLinkScanner = POSLinkScanner.getPOSLinkScanner(this.context, scannerType)
             val processResult = posLinkScanner.open()
@@ -33,8 +31,7 @@ class PaxPoslink2ScannerModule(reactContext: ReactApplicationContext) :
         }
     }
 
-    @ReactMethod
-    fun close(scannerType: String?, promise: Promise) {
+    override fun close(scannerType: String?, promise: Promise) {
         try {
             val posLinkScanner = POSLinkScanner.getPOSLinkScanner(this.context, scannerType)
             val processResult = posLinkScanner.close()
@@ -45,8 +42,7 @@ class PaxPoslink2ScannerModule(reactContext: ReactApplicationContext) :
         }
     }
 
-    @ReactMethod
-    fun start(scannerType: String?, promise: Promise) {
+    override fun start(scannerType: String?, promise: Promise) {
         try {
             val posLinkScanner = POSLinkScanner.getPOSLinkScanner(this.context, scannerType)
             posLinkScanner.start(object : POSLinkScanner.IScanListener {

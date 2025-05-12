@@ -12,20 +12,20 @@ import com.pax.poslinkperipheries.ProcessResult
 import com.pax.poslinkperipheries.printer.POSLinkBluetoothPrinter
 import com.pax.poslinkperipheries.printer.POSLinkPrinter
 
+import com.paxposlink2.NativePaxPoslink2BluetoothPrinterSpec
 //import com.pax.poslink.peripheries.POSLinkBluetoothPrinter
 //import com.pax.poslink.peripheries.POSLinkPrinter
 //import com.pax.poslink.peripheries.ProcessResult
 
 class PaxPoslink2BluetoothPrinterModule(reactContext: ReactApplicationContext) :
-    ReactContextBaseJavaModule(reactContext) {
+    NativePaxPoslink2BluetoothPrinterSpec(reactContext) {
     private val context: Context = reactContext
 
     override fun getName(): String {
         return NAME
     }
 
-    @ReactMethod
-    fun setMacAddress(macAddress: String?, promise: Promise) {
+    override fun setMacAddress(macAddress: String, promise: Promise) {
         try {
             val posLinkBluetoothPrinter = POSLinkBluetoothPrinter.getInstance(
                 this.context
@@ -38,8 +38,7 @@ class PaxPoslink2BluetoothPrinterModule(reactContext: ReactApplicationContext) :
         }
     }
 
-    @ReactMethod
-    fun printImageBase64(base64Image: String?, cutMode: Int, promise: Promise) {
+    override fun printImageBase64(base64Image: String, cutMode: Double, promise: Promise) {
         try {
             val printListener: POSLinkPrinter.PrintListener =
                 object : POSLinkPrinter.PrintListener {
@@ -57,20 +56,19 @@ class PaxPoslink2BluetoothPrinterModule(reactContext: ReactApplicationContext) :
             val posLinkBluetoothPrinter = POSLinkBluetoothPrinter.getInstance(
                 this.context
             )
-            posLinkBluetoothPrinter.print(bitmap, cutMode, printListener)
+            posLinkBluetoothPrinter.print(bitmap, cutMode.toInt(), printListener)
         } catch (e: Exception) {
             Log.e("PaxPOSLink", e.message!!)
             promise.reject("Exception", e.message)
         }
     }
 
-    @ReactMethod
-    fun cutPaper(cutMode: Int, promise: Promise) {
+    override fun cutPaper(cutMode: Double, promise: Promise) {
         try {
             val posLinkBluetoothPrinter = POSLinkBluetoothPrinter.getInstance(
                 this.context
             )
-            val response = posLinkBluetoothPrinter.cutPaper(cutMode)
+            val response = posLinkBluetoothPrinter.cutPaper(cutMode.toInt())
             promise.resolve("" + response)
         } catch (e: Exception) {
             Log.e("PaxPOSLink", e.message!!)
@@ -78,8 +76,7 @@ class PaxPoslink2BluetoothPrinterModule(reactContext: ReactApplicationContext) :
         }
     }
 
-    @ReactMethod
-    fun disconnect(promise: Promise) {
+    override fun disconnect(promise: Promise) {
         try {
             val posLinkBluetoothPrinter = POSLinkBluetoothPrinter.getInstance(
                 this.context
