@@ -9,6 +9,9 @@ class PaxPoslink2Package : ReactPackage {
     override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
         val modules: MutableList<NativeModule> = ArrayList()
         modules.add(PaxPoslink2Module(reactContext))
+        modules.add(PaxPoslink2BluetoothPrinterModule(reactContext))
+        modules.add(PaxPoslink2CashDrawerModule(reactContext))
+        modules.add(PaxPoslink2ScannerModule(reactContext))
         return modules
     }
 
