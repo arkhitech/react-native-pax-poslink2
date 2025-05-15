@@ -107,6 +107,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
                 return
             }
         }
+        promise.resolve("success");
 
         //      if (proxy) {
 //        commSetting.setEnableProxy(proxy);

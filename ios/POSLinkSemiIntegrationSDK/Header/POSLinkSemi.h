@@ -18,27 +18,27 @@
 
 @interface POSLinkSemi : NSObject
 
-+ (instancetype)getInstance;
++ (instancetype _Nonnull )getInstance;
 /**
  * Get a instance of PLSemiTerminal.
  * This function will verify whether the terminal exists. It may take several minutes. If the verification fails, it will return NULL and need to be verified again.
  *
  * @param commSetting Setting of communication mode.
 */
-- (PLSemiTerminal * _Nullable)getTerminalWithCommunicationSetting:(PLCommunicationSetting *)commSetting;
+- (PLSemiTerminal * _Nullable)getTerminalWithCommunicationSetting:(PLCommunicationSetting *_Nonnull)commSetting;
 /**
  * Set Log
  *
  * @param logSetting logSetting.
 */
-- (void)setLogSetting:(PLLogSetting *)logSetting;
+- (void)setLogSetting:(PLLogSetting *_Nonnull)logSetting;
 
 /**
  * Remove Terminal
  *
  * @param terminal terminal.
 */
-- (void)removeTerminal:(PLSemiTerminal *)terminal;
+- (void)removeTerminal:(PLSemiTerminal *_Nonnull)terminal;
 
 @end
 
