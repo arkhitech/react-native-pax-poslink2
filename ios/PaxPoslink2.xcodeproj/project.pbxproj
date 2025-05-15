@@ -29,7 +29,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		134814201AA4EA6300B7C361 /* libPaxPoslink.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPaxPoslink.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		134814201AA4EA6300B7C361 /* libPaxPoslink2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPaxPoslink2.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		395628052DD2B04700E944C1 /* PaxPoslink2Printer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaxPoslink2Printer.h; sourceTree = "<group>"; };
 		395628062DD2B04700E944C1 /* PaxPoslink2Printer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PaxPoslink2Printer.mm; sourceTree = "<group>"; };
 		395628082DD2B04900E944C1 /* PaxPoslink2BluetoothPrinter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaxPoslink2BluetoothPrinter.h; sourceTree = "<group>"; };
@@ -305,7 +305,7 @@
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				134814201AA4EA6300B7C361 /* libPaxPoslink.a */,
+				134814201AA4EA6300B7C361 /* libPaxPoslink2.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -609,9 +609,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		58B511DA1A9E6C8500147676 /* PaxPoslink */ = {
+		58B511DA1A9E6C8500147676 /* PaxPoslink2 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "PaxPoslink" */;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "PaxPoslink2" */;
 			buildPhases = (
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
@@ -621,9 +621,9 @@
 			);
 			dependencies = (
 			);
-			name = PaxPoslink;
+			name = PaxPoslink2;
 			productName = RCTDataManager;
-			productReference = 134814201AA4EA6300B7C361 /* libPaxPoslink.a */;
+			productReference = 134814201AA4EA6300B7C361 /* libPaxPoslink2.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -640,7 +640,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "PaxPoslink" */;
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "PaxPoslink2" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -653,7 +653,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				58B511DA1A9E6C8500147676 /* PaxPoslink */,
+				58B511DA1A9E6C8500147676 /* PaxPoslink2 */,
 			);
 		};
 /* End PBXProject section */
@@ -784,7 +784,7 @@
 					"$(PROJECT_DIR)/POSLinkAdminSDK/POSLinkSemiIntegrationSDK",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = PaxPoslink;
+				PRODUCT_NAME = PaxPoslink2;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -804,7 +804,7 @@
 					"$(PROJECT_DIR)/POSLinkAdminSDK/POSLinkSemiIntegrationSDK",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = PaxPoslink;
+				PRODUCT_NAME = PaxPoslink2;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -812,7 +812,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "PaxPoslink" */ = {
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "PaxPoslink2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511ED1A9E6C8500147676 /* Debug */,
@@ -821,7 +821,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "PaxPoslink" */ = {
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "PaxPoslink2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511F01A9E6C8500147676 /* Debug */,
