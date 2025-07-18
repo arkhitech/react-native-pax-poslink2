@@ -121,7 +121,10 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
         promise: Promise
     ) {
         val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
-
+        if(terminal == null) {
+            promise.reject("Exception", "Terminal not found")
+            return
+        }
         val amountRequest = AmountRequest()
         amountRequest.transactionAmount = amount
         amountRequest.tipAmount = tip
@@ -141,6 +144,10 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
 
     override fun makeCashPayment(amount: String?, tip: String?, referenceNumber: String?, promise: Promise) {
         val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
+        if(terminal == null) {
+            promise.reject("Exception", "Terminal not found")
+            return
+        }
 
         val amountRequest = AmountRequest()
         amountRequest.transactionAmount = amount
