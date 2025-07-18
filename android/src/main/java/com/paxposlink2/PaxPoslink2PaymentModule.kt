@@ -123,8 +123,16 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
         val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
         if(terminal == null) {
             promise.reject("Exception", "Terminal not found")
+            // if(amount == "-1") {
+            //     generateMockCreditErrorResponse(amount, tip, referenceNumber, promise)
+
+            // } else {
+            //     generateMockCreditSuccessResponse(amount, tip, referenceNumber, promise)
+            // }
+
             return
         }
+
         val amountRequest = AmountRequest()
         amountRequest.transactionAmount = amount
         amountRequest.tipAmount = tip
@@ -143,9 +151,16 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
     }
 
     override fun makeCashPayment(amount: String?, tip: String?, referenceNumber: String?, promise: Promise) {
+        
         val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
         if(terminal == null) {
             promise.reject("Exception", "Terminal not found")
+            // if(amount == "-1") {
+            //     generateMockCashErrorResponse(amount, tip, referenceNumber, promise)
+
+            // } else {
+            //     generateMockCashSuccessResponse(amount, tip, referenceNumber, promise)
+            // }
             return
         }
 
@@ -192,6 +207,182 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
 //
 //        this.handleCashExecutionResult(executionResult, promise)
 //    }
+
+    private fun generateMockCreditSuccessResponse(
+        amount: String?,
+        tip: String?,
+        referenceNumber: String?,
+        promise: Promise
+    ) {
+        val map = Arguments.createMap()
+        map.putString("ApprovedAmount", 
+            // doCreditResponse.amountInformation().approvedAmount()
+            amount
+        )
+        map.putString(
+            "ApprovedCashBackAmount",
+            // doCreditResponse.amountInformation().approvedCashBackAmount()
+            "0"
+        )
+        map.putString(
+            "ApprovedMerchantFee",
+            // doCreditResponse.amountInformation().approvedMerchantFee()
+            "10"
+        )
+        map.putString(
+            "ApprovedTaxAmount",
+            // doCreditResponse.amountInformation().approvedTaxAmount()
+            "11"
+        )
+        map.putString(
+            "ApprovedTipAmount",
+            // doCreditResponse.amountInformation().approvedTipAmount()
+             "15"
+        )
+        map.putString(
+            "AuthCode", 
+            "AUTH-code"
+        )
+        map.putString("AuthorizationResponse", "Autho Response")
+        map.putString("AvsResponse", "AVSResponse")
+        map.putString(
+            "CurrentAccountNumber",
+            // doCreditResponse.accountInformation().currentAccountNumber()
+            "123456566"
+        )
+        map.putString("CardType", 
+            // doCreditResponse.accountInformation().cardType().getName()
+            "testcardtype"
+        )
+        map.putString(
+            "CvdApprovalCode",
+            // doCreditResponse.accountInformation().cvdApprovalCode()
+            "5555"
+        )
+        map.putString(
+            "DebitAccountType",
+            // doCreditResponse.accountInformation().debitAccountType().getName()
+            "DACT1234"
+        )
+        map.putString("ECRTransID", 
+            // doCreditResponse.hostTraceInformation().ecrTransactionId()
+            "ECTTransID-12345"
+        )
+        map.putString("EDCType", 
+            // doCreditResponse.edcType()
+            "creditEdcType"
+        )
+        //      map.putString("ExtraBalance", doCreditResponse.amountInformation().ExtraBalance);
+        map.putString(
+            "GatewayTransactionID",
+            "GatewayID-12345"
+            //doCreditResponse.hostInformation().gatewayTransactionId()
+        )
+        map.putString("GiftCardType", 
+        "Token"
+        //doCreditResponse.accountInformation().giftCardType().getName()
+        )
+        map.putString("ReferenceNumber", 
+        referenceNumber
+        //doCreditResponse.traceInformation().referenceNumber()
+        )
+        map.putString("HostCardType", 
+        "CARD123"
+        //doCreditResponse.accountInformation().hostCardType()
+        )
+        map.putString("HostResponseCode", 
+        "200"
+        //doCreditResponse.hostInformation().hostResponseCode()
+        )
+        map.putString(
+            "HostResponseMessage",
+            "connected successfully"
+            //doCreditResponse.torInformation().hostResponseMessage()
+        )
+        map.putString(
+            "HostDetailMessage",
+            "payment is successful"
+            //doCreditResponse.hostInformation().hostDetailedMessage()
+        )
+        map.putString("HostTimeStamp", 
+        "18-07-2025"
+        //doCreditResponse.hostTraceInformation().hostTimeStamp()
+        )
+        map.putString(
+            "HostReferenceNumber",
+            "Ref1234"
+           // doCreditResponse.hostTraceInformation().hostReferenceNumber()
+        )
+        map.putString(
+            "IssuerResponseCode",
+            "200"
+           // doCreditResponse.hostInformation().issuerResponseCode()
+        )
+        map.putString("MaskedPAN",
+        "PAN1234"
+        //doCreditResponse.torInformation().maskedPan()
+        )
+        map.putString("ResponseMessage", 
+        "response200"
+        //doCreditResponse.responseMessage()
+        )
+        map.putString("PayloadData", 
+        "string data"
+        //doCreditResponse.payloadData()
+        )
+        map.putString(
+            "PaymentAccountReferenceID",
+            "RefId223"
+            //doCreditResponse.hostInformation().paymentAccountReferenceId()
+        )
+        //      map.putString("RawResponse", doCreditResponse.RawResponse);
+    //      map.putString("RemainingBalance", doCreditResponse.RemainingBalance);
+        map.putString("RequestedAmount", 
+        amount
+        //doCreditResponse.torInformation().originalAmount()
+        )
+        //      map.putString("ResultCode", doCreditResponse.ResultCode);
+    //      map.putString("ResultTxt", doCreditResponse.ResultTxt);
+        map.putString(
+            "RetrievalReferenceNumber",
+            "RetRef2234"
+            //doCreditResponse.hostInformation().retrievalReferenceNumber()
+        )
+        //      map.putString("SigFileName", doCreditResponse.SigFileName);
+        map.putString("SignData", 
+        "1112323"
+        //doCreditResponse.signatureInformation().signatureData()
+        )
+        map.putString("Timestamp", 
+        "18-07-2-25"
+        //doCreditResponse.traceInformation().timeStamp()
+        )
+        map.putString("Track1Data", 
+        "2223223"
+        //doCreditResponse.accountInformation().track1Data()
+        )
+        map.putString("Track2Data", 
+        "2235443"
+        //doCreditResponse.accountInformation().track2Data()
+        )
+        map.putString("Track3Data", 
+        "33234533"
+        //doCreditResponse.accountInformation().track3Data()
+        )
+        map.putString(
+            "TransactionIntegrityClass",
+            "debit"
+            //doCreditResponse.hostInformation().transactionIntegrityClass()
+        )
+        map.putString(
+            "TransactionRemainingAmount",
+            "110"
+            //doCreditResponse.amountInformation().transactionRemainingAmount()
+        )
+
+        //      map.putString("ExtData", doCreditResponse.ExtData);
+        promise.resolve(map)
+    }
 
     private fun handleCreditExecutionResult(
         executionResult: ExecutionResult<DoCreditResponse>,
@@ -303,6 +494,165 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
 
             promise.reject(errorCode, errorMsg)
         }
+    }
+
+    private fun generateMockCashErrorResponse(
+        amount: String?,
+        tip: String?,
+        referenceNumber: String?,
+        promise: Promise
+    ) {
+        promise.reject("TESTCASHERROR", "TEST Cash Error")
+    }
+
+    private fun generateMockCreditErrorResponse(
+        amount: String?,
+        tip: String?,
+        referenceNumber: String?,
+        promise: Promise
+    ) {
+        promise.reject("TESTCReditERROR", "TEST Credit Error")
+    }
+
+    private fun generateMockCashSuccessResponse(
+        amount: String?,
+        tip: String?,
+        referenceNumber: String?,
+        promise: Promise
+    ) {
+        Log.d("PAYMENT_RESPONSE_DEBUG AuthCode", 
+        "AUTH123"
+        //doCashResponse.responseCode()
+        )
+        val map = Arguments.createMap()
+        map.putString("ApprovedAmount", 
+        amount
+        //doCashResponse.amountInformation().approvedAmount()
+        )
+        map.putString(
+            "ApprovedCashBackAmount",
+            "0"
+            //doCashResponse.amountInformation().approvedCashBackAmount()
+        )
+        map.putString(
+            "ApprovedMerchantFee",
+            "5"
+            //doCashResponse.amountInformation().approvedMerchantFee()
+        )
+        map.putString(
+            "ApprovedTaxAmount",
+            "12"
+            //doCashResponse.amountInformation().approvedTaxAmount()
+        )
+        map.putString(
+            "ApprovedTipAmount",
+            "5"
+            //doCashResponse.amountInformation().approvedTipAmount()
+        )
+        map.putString("AuthCode", "CashAuthCode")
+        map.putString("AuthorizationResponse", "CashAuthResponse")
+        //      map.putString("AvsResponse", doCashResponse.avsInformation().avsMessage());
+//      map.putString("CurrentAccountNumber", doCashResponse.accountInformation().currentAccountNumber());
+//      map.putString("CardType", doCashResponse.accountInformation().cardType());
+//      map.putString("CvdApprovalCode", doCashResponse.accountInformation().cvdApprovalCode());
+//      map.putString("DebitAccountType", doCashResponse.accountInformation().debitAccountType());
+        map.putString("ECRTransID", 
+        "ECRT123"
+        //doCashResponse.hostTraceInformation().ecrTransactionId()
+        )
+//            map.putString("EDCType", doCashResponse.edcType())
+        //      map.putString("ExtraBalance", doCreditResponse.amountInformation().ExtraBalance);
+        map.putString(
+            "GatewayTransactionID",
+            "T123"
+            //doCashResponse.hostInformation().gatewayTransactionId()
+        )
+        //      map.putString("GiftCardType", doCashResponse.accountInformation().giftCardType());
+        map.putString("ReferenceNumber", 
+        "Ref123"
+        // doCashResponse.traceInformation().referenceNumber()
+        )
+        //      map.putString("HostCardType", doCashResponse.accountInformation().hostCardType());
+        map.putString("HostResponseCode", 
+        "200"
+        //doCashResponse.hostInformation().hostResponseCode()
+        )
+        map.putString(
+            "HostResponseMessage",
+            "Connected Successfully"
+            //doCashResponse.torInformation().hostResponseMessage()
+        )
+        map.putString(
+            "HostDetailMessage",
+            "Payment is Successful"
+            //doCashResponse.hostInformation().hostDetailedMessage()
+        )
+        map.putString("HostTimeStamp", 
+        "18-07-2025"
+        //doCashResponse.hostTraceInformation().hostTimeStamp()
+        )
+        map.putString(
+            "HostReferenceNumber",
+            "Ref1234"
+            //doCashResponse.hostTraceInformation().hostReferenceNumber()
+        )
+        map.putString(
+            "IssuerResponseCode",
+            "200"
+            //doCashResponse.hostInformation().issuerResponseCode()
+        )
+        map.putString("MaskedPAN", 
+        "PAN123"
+        //doCashResponse.torInformation().maskedPan()
+        )
+        map.putString("ResponseMessage", 
+        "Connected"
+        //doCashResponse.responseMessage()
+        )
+        //      map.putString("PayloadData", doCashResponse.payloadData());
+        map.putString(
+            "PaymentAccountReferenceID",
+            "REF3345"
+            //doCashResponse.hostInformation().paymentAccountReferenceId()
+        )
+        //      map.putString("RawResponse", doCashResponse.RawResponse);
+//      map.putString("RemainingBalance", doCashResponse.RemainingBalance);
+        map.putString("RequestedAmount", 
+        "110"
+        //doCashResponse.torInformation().originalAmount()
+        )
+        //      map.putString("ResultCode", doCashResponse.ResultCode);
+//      map.putString("ResultTxt", doCashResponse.ResultTxt);
+        map.putString(
+            "RetrievalReferenceNumber",
+            "Ref2234"
+            //doCashResponse.hostInformation().retrievalReferenceNumber()
+        )
+        //      map.putString("SigFileName", doCashResponse.SigFileName);
+        map.putString("SignData", 
+        "22335545"
+        //doCashResponse.signatureInformation().signatureData()
+        )
+        map.putString("Timestamp", 
+        "18-07-2025"
+        //doCashResponse.traceInformation().timeStamp()
+        )
+        //      map.putString("Track1Data", doCashResponse.accountInformation().track1Data());
+//      map.putString("Track2Data", doCashResponse.accountInformation().track2Data());
+//      map.putString("Track3Data", doCashResponse.accountInformation().track3Data());
+        map.putString(
+            "TransactionIntegrityClass",
+            "Debit"
+            //doCashResponse.hostInformation().transactionIntegrityClass()
+        )
+        map.putString(
+            "TransactionRemainingAmount",
+            "20"
+            //doCashResponse.amountInformation().transactionRemainingAmount()
+        )
+
+        //      map.putString("ExtData", doCashResponse.ExtData);
+        promise.resolve(map)
     }
 
     private fun handleCashExecutionResult(
