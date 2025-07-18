@@ -1,6 +1,6 @@
 {
   "name": "react-native-pax-poslink2",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "react native library to integrate with pax devices using POSLink SDK",
   "main": "./src/index.js",
   "types": "./lib/typescript/src/index.d.ts",
