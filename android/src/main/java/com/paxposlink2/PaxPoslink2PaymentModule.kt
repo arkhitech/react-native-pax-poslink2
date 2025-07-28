@@ -114,6 +114,15 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
 //      }
     }
 
+    override fun verifyPOSTerminal(promise: Promise) {
+      val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
+      if(terminal == null) {
+        promise.reject("Exception", "Terminal not found")
+      } else {
+        promise.resolve("success")
+      }
+    }
+
     override fun makeCreditPayment(
         amount: String?,
         tip: String?,

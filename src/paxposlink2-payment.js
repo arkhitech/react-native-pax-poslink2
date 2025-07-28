@@ -14,6 +14,10 @@ export const initPOSLink = (type, timeout, nameOrMac, ipOrSerial, portOrBaud) =>
   return PaxPoslink2Payment.initPOSLink(type, timeout, nameOrMac, ipOrSerial, portOrBaud);
 }
 
+export const verifyPOSTerminal = () => {
+  return PaxPoslink2Payment.verifyPOSTerminal();
+}
+
 export const initPaymentCommunication = (type, timeout, nameOrMac, ipOrSerial, portOrBaud) => {
   return PaxPoslink2Payment.initPaymentCommunication(type, timeout, nameOrMac, ipOrSerial, portOrBaud);
 }

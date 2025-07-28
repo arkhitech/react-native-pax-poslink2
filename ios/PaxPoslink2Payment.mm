@@ -24,6 +24,17 @@ PLCommunicationSetting* communicationSettings;
   // [self initPaymentCommunication:type timeout:timeout nameOrMac:nameOrMac ipOrSerial:ipOrSerial portOrBaud:portOrBaud resolve:resolve reject:reject];
 }
 
+- (void)verifyPOSTerminal:(nonnull RCTPromiseResolveBlock)resolve reject:(nonnull RCTPromiseRejectBlock)reject {
+  reject(@"not supported on iOS", @"not supported on iOS", nil);
+  // PLLogSetting *plLogSetting = [[PLLogSetting alloc] init];
+  // plLogSetting.level = LoggerLevelDebug;
+  // plLogSetting.dirName = @"POSLinkLog";
+  // plLogSetting.keepDays = 30;
+  // POSLinkSemi* posLinkSemi = [POSLinkSemi getInstance];
+  // [posLinkSemi setLogSetting:plLogSetting];
+  // [self initPaymentCommunication:type timeout:timeout nameOrMac:nameOrMac ipOrSerial:ipOrSerial portOrBaud:portOrBaud resolve:resolve reject:reject];
+}
+
 - (void)initPaymentCommunication:(nonnull NSString *)type timeout:(double)timeout nameOrMac:(nonnull NSString *)nameOrMac ipOrSerial:(nonnull NSString *)ipOrSerial portOrBaud:(nonnull NSString *)portOrBaud resolve:(nonnull RCTPromiseResolveBlock)resolve reject:(nonnull RCTPromiseRejectBlock)reject {
   reject(@"not supported on iOS", @"not supported on iOS", nil);
 //   if([@"TCP" isEqualToString:type]) {

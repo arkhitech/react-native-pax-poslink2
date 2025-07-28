@@ -3,6 +3,8 @@ import { TurboModuleRegistry } from 'react-native';
 
 export interface Spec extends TurboModule {
   initPOSLink(type: string, timeout: number, nameOrMac?: string, ipOrSerial?: string, portOrBaud?: string) : Promise<string>;
+
+  verifyPOSTerminal() : Promise<string>;
   
   initPaymentCommunication(type: string, timeout: number, nameOrMac?: string, ipOrSerial?: string, portOrBaud?: string) : Promise<string>;
   
