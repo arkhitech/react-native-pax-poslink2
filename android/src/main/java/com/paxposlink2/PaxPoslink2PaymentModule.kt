@@ -50,6 +50,10 @@ import com.pax.poslinksemiintegration.util.TraceRequest
 import com.pax.poslinksemiintegration.util.TraceResponse
 import com.pax.poslinksemiintegration.util.TransactionBehaviorResponse
 
+import com.pax.poslinkadmin.manage.InitResponse;
+import com.pax.poslinksemiintegration.batch.BatchCloseRequest
+import com.pax.poslinksemiintegration.batch.BatchCloseResponse
+
 @ReactModule(name = PaxPoslink2PaymentModule.NAME)
 class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
         NativePaxPoslink2PaymentSpec(reactContext) {
@@ -136,6 +140,20 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
       promise.reject("Exception", "Terminal not found")
     } else {
       promise.resolve("success")
+      // ExecutionResult<InitResponse> result = terminal.getManage().init();
+      // if (result.isSuccessful()) {
+      //     StringBuilder messageBuilder = StringBuilder("Init Success!\n");
+      //     InitResponse response = result.response();
+      //     messageBuilder.append("AppName: ").append(response.appName()).append("\n")
+      //             .append("AppVersion: ").append(response.appVersion()).append("\n")
+      //             .append("SN: ").append(response.sn()).append("\n")
+      //             .append("ModelName: ").append(response.modelName()).append("\n")
+      //             .append("OSVersion: ").append(response.osVersion());
+      //     promise.resolve(messageBuilder.toString());
+      // } else {
+      //     promise.reject("Trans Failed!", "Error Message:" + result.message()); 
+      // }
+
     }
   }
 
@@ -147,7 +165,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
   ) {
     val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
     if (terminal == null) {
-      // promise.reject("Exception", "Terminal not found")
+      promise.reject("Exception", "Terminal not found")
       // if(amount == "-1") {
       //   generateMockCreditErrorResponse(amount, tip, referenceNumber, promise)
       // } else {
@@ -212,31 +230,103 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
     this.handleCashExecutionResult(executionResult, promise)
   }
 
-  //    fun makeReturnPayment(
-  //        amount: String?,
-  //        tip: String?,
-  //        referenceNumber: String?,
-  //        promise: Promise
-  //    ) {
-  //        val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
-  //
-  //        val amountRequest = AmountRequest()
-  //        amountRequest.transactionAmount = amount
-  //        amountRequest.tipAmount = tip
-  //
-  //        val traceRequest = TraceRequest()
-  //        traceRequest.ecrReferenceNumber = referenceNumber
-  //
-  //        val doCashRequest = DoCashRequest()
-  //        doCashRequest.transactionType = TransactionType.SALE
-  //        doCashRequest.amountInformation = amountRequest
-  //        doCashRequest.traceInformation = traceRequest
-  //
-  //        val executionResult: ExecutionResult<DoCashResponse> =
-  //            terminal.transaction.doCash(doCashRequest)
-  //
-  //        this.handleCashExecutionResult(executionResult, promise)
-  //    }
+  override fun voidCreditPayment( 
+      amount: String?,
+      tip: String?,
+      referenceNumber: String?,
+      promise: Promise
+  ) {
+    val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
+    if (terminal == null) {
+      promise.reject("Exception", "Terminal not found")
+      // if(amount == "-1") {
+      //     generateMockCreditErrorResponse(amount, tip, referenceNumber, promise)
+
+      // } else {
+      //     generateMockCreditSuccessResponse(amount, tip, referenceNumber, promise)
+      // }
+      return
+    }
+
+    val amountRequest = AmountRequest()
+    amountRequest.transactionAmount = amount
+    amountRequest.tipAmount = tip
+
+    val traceRequest = TraceRequest()
+    traceRequest.ecrReferenceNumber = referenceNumber //if (transType in listOf(TransactionType.SALE, TransactionType.VOID_SALE, TransactionType.RETURN)) it else null
+    traceRequest.originalEcrReferenceNumber = referenceNumber //if (transType == TransactionType.VOID_SALE) it else null
+
+    val doCreditRequest = DoCreditRequest()
+    doCreditRequest.transactionType = TransactionType.VOID_SALE
+    doCreditRequest.amountInformation = amountRequest
+    doCreditRequest.traceInformation = traceRequest
+
+    val executionResult: ExecutionResult<DoCreditResponse> =
+            terminal.transaction.doCredit(doCreditRequest)
+
+    this.handleCreditExecutionResult(executionResult, promise)
+  }
+
+  override fun returnCreditPayment( 
+      amount: String?,
+      tip: String?,
+      referenceNumber: String?,
+      promise: Promise
+  ) {
+    val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
+    if (terminal == null) {
+      promise.reject("Exception", "Terminal not found")
+      // if(amount == "-1") {
+      //     generateMockCreditErrorResponse(amount, tip, referenceNumber, promise)
+
+      // } else {
+      //     generateMockCreditSuccessResponse(amount, tip, referenceNumber, promise)
+      // }
+      return
+    }
+
+    val amountRequest = AmountRequest()
+    amountRequest.transactionAmount = amount
+    amountRequest.tipAmount = tip
+
+    val traceRequest = TraceRequest()
+    traceRequest.ecrReferenceNumber = referenceNumber //if (transType in listOf(TransactionType.SALE, TransactionType.VOID_SALE, TransactionType.RETURN)) it else null
+    traceRequest.originalEcrReferenceNumber = referenceNumber //if (transType == TransactionType.VOID_SALE) it else null
+
+    val doCreditRequest = DoCreditRequest()
+    doCreditRequest.transactionType = TransactionType.RETURN
+    doCreditRequest.amountInformation = amountRequest
+    doCreditRequest.traceInformation = traceRequest
+
+    val executionResult: ExecutionResult<DoCreditResponse> =
+            terminal.transaction.doCredit(doCreditRequest)
+
+    this.handleCreditExecutionResult(executionResult, promise)
+  }
+
+
+  override fun closeBatch(promise: Promise) {
+    val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
+    if (terminal == null) {
+      promise.reject("Exception", "Terminal not found")
+      // if(amount == "-1") {
+      //     generateMockCashErrorResponse(amount, tip, referenceNumber, promise)
+
+      // } else {
+      //     generateMockCashSuccessResponse(amount, tip, referenceNumber, promise)
+      // }
+      return
+    }
+    val batchCloseReq = BatchCloseRequest()
+    // val batchCloseRsp = BatchCloseResponse()
+    val result = terminal.batch?.batchClose(batchCloseReq)
+    if (result?.code() == ExecutionCode.OK) {
+        promise.resolve("Batch close successfully")
+        return
+    }
+    promise.reject("Failed", "Batch close error")
+  }
+
 
   private fun generateMockCreditSuccessResponse(
           amount: String?,
@@ -373,9 +463,9 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
     val map = Arguments.createMap()
     if (avsInformation == null) return map
 
-    map.putString("avsMessage", avsInformation?.avsMessage())
-    map.putString("zipCode", avsInformation?.zipCode())
-    map.putString("address", avsInformation?.address1())
+    map.putString("avsMessage", avsInformation.avsMessage())
+    map.putString("zipCode", avsInformation.zipCode())
+    map.putString("address", avsInformation.address1())
 
     return map
   }

@@ -29,3 +29,29 @@ export const makeCreditPayment = (amount, tip, referenceNumber) => {
 export const makeCashPayment = (amount, tip, referenceNumber) => {
   return PaxPoslink2Payment.makeCashPayment(amount, tip, referenceNumber); 
 }
+
+/**
+ * Initiates a refund transaction.
+ * @param {string} amount - The amount to refund.
+ * @returns {Promise<PaxResponseModel>} A promise resolving to the refund result.
+ */
+export const makeRefund = (amount) => {
+  return PaxPoslink2Payment.refund({ amount });
+}
+
+/**
+ * Voids a transaction for the given amount.
+ * @param {string} amount - The amount to void.
+ * @returns {Promise<PaxResponseModel>} A promise resolving to the void result.
+ */
+export const makeVoid = (amount) => {
+  return PaxPoslink2Payment.void({ amount });
+}
+
+/**
+ * Closes the current batch of transactions.
+ * @returns {Promise<PaxResponseModel>} A promise resolving to the batch closeout result.
+ */
+export const makeCloseBatch = () => {
+  return PaxPoslink2Payment.batchCloseout();
+}

@@ -11,7 +11,12 @@ export interface Spec extends TurboModule {
   makeCreditPayment(amount: string, tip: string, referenceNumber?: string) : Promise<string>;
 
   makeCashPayment(amount: string, tip: string, referenceNumber?: string) : Promise<string>;
+
+  voidCreditPayment(amount: string, tip: string, referenceNumber?: string) : Promise<string>;
+
+  returnCreditPayment(amount: string, tip: string, referenceNumber?: string) : Promise<string>;
   
+  closeBatch() : Promise<string>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('PaxPoslink2Payment');
