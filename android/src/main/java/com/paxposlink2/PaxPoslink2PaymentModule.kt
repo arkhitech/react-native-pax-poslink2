@@ -7,6 +7,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.module.annotations.ReactModule
 import com.pax.poscore.LogSetting
 import com.pax.poscore.commsetting.AidlSetting
@@ -151,103 +152,139 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
       //             .append("OSVersion: ").append(response.osVersion());
       //     promise.resolve(messageBuilder.toString());
       // } else {
-      //     promise.reject("Trans Failed!", "Error Message:" + result.message()); 
+      //     promise.reject("Trans Failed!", "Error Message:" + result.message());
       // }
 
     }
   }
 
-  override fun makeCreditPayment(
-          amount: String?,
-          tip: String?,
-          referenceNumber: String?,
-          promise: Promise
+  fun processCreditRequest(
+    doCreditRequest: DoCreditRequest,
+    testMode: Boolean?,
+    promise: Promise
   ) {
-    val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
-    if (terminal == null) {
-      promise.reject("Exception", "Terminal not found")
-      // if(amount == "-1") {
-      //   generateMockCreditErrorResponse(amount, tip, referenceNumber, promise)
-      // } else {
-      //   generateMockCreditSuccessResponse(amount, tip, referenceNumber, promise)
-      // }
-
+    if(testMode != null && testMode) {
+      val amountRequest = doCreditRequest.amountInformation
+      if(amountRequest.transactionAmount == "-1") {
+        generateMockCreditErrorResponse(amountRequest.transactionAmount, amountRequest.tipAmount, referenceNumber, promise)
+      } else {
+        generateMockCreditSuccessResponse(amountRequest.transactionAmount, amountRequest.tipAmount, referenceNumber, promise)
+      }
       return
     }
 
-    val amountRequest = AmountRequest()
-    amountRequest.transactionAmount = amount
-    amountRequest.tipAmount = tip
+    val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
+    if (terminal == null) {
+      promise.reject("Exception", "Terminal not found")
 
-    val traceRequest = TraceRequest()
-    traceRequest.ecrReferenceNumber = referenceNumber
-
-    val doCreditRequest = DoCreditRequest()
-    doCreditRequest.transactionType = TransactionType.SALE
-    doCreditRequest.amountInformation = amountRequest
-    doCreditRequest.traceInformation = traceRequest
-
+      return terminal
+    }
     var executionResult: ExecutionResult<DoCreditResponse> =
             terminal.transaction.doCredit(doCreditRequest)
 
-    this.handleCreditExecutionResult(executionResult, promise)
+    handleCreditExecutionResult(executionResult, promise)
   }
 
-  override fun makeCashPayment(
-          amount: String?,
-          tip: String?,
-          referenceNumber: String?,
-          promise: Promise
+  fun processCashRequest(
+    doCashRequest: DoCashRequest,
+    testMode: Boolean?,
+    promise: Promise
   ) {
+    if(testMode != null && testMode) {
+      val amountRequest = doCashRequest.amountInformation
+      if(amountRequest.transactionAmount == "-1") {
+        generateMockCashErrorResponse(amountRequest.transactionAmount, amountRequest.tipAmount, referenceNumber, promise)
+
+      } else {
+        generateMockCashSuccessResponse(amountRequest.transactionAmount, amountRequest.tipAmount, referenceNumber, promise)
+      }
+      return
+    }
 
     val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
     if (terminal == null) {
       promise.reject("Exception", "Terminal not found")
-      // if(amount == "-1") {
-      //     generateMockCashErrorResponse(amount, tip, referenceNumber, promise)
-
-      // } else {
-      //     generateMockCashSuccessResponse(amount, tip, referenceNumber, promise)
-      // }
       return
     }
+    val executionResult: ExecutionResult<DoCashResponse> =
+            terminal.transaction.doCash(doCashRequest)
+
+    handleCashExecutionResult(executionResult, promise)
+  }
+
+  override fun makeCreditPaymentWithAmountRequestMap(
+    amountRequestMap: ReadableMap,
+    referenceNumber: String?,
+    testMode: Boolean?,
+    promise: Promise
+  ) {
+    val amountRequest = this.getAmountRequestFromMap(amountRequestMap)
+    makeCreditPaymentWithAmountRequest(amountRequest, referenceNumber, testMode, promise)
+  }
+
+  override fun makeCreditPayment(
+    amount: String?,
+    tip: String?,
+    referenceNumber: String?,
+    testMode: Boolean?,
+    promise: Promise
+  ) {
 
     val amountRequest = AmountRequest()
     amountRequest.transactionAmount = amount
     amountRequest.tipAmount = tip
-
-    val traceRequest = TraceRequest()
-    traceRequest.ecrReferenceNumber = referenceNumber
-
-    val doCashRequest = DoCashRequest()
-    doCashRequest.transactionType = TransactionType.SALE
-    doCashRequest.amountInformation = amountRequest
-    doCashRequest.traceInformation = traceRequest
-
-    val executionResult: ExecutionResult<DoCashResponse> =
-            terminal.transaction.doCash(doCashRequest)
-
-    this.handleCashExecutionResult(executionResult, promise)
+    makeCreditPaymentWithAmountRequest(amountRequest, referenceNumber, testMode, promise)
   }
 
-  override fun voidCreditPayment( 
-      amount: String?,
-      tip: String?,
-      referenceNumber: String?,
-      promise: Promise
+  override fun makeCashPaymentWithAmountRequestMap(
+    amountRequestMap: ReadableMap,
+    referenceNumber: String?,
+    testMode: Boolean?,
+    promise: Promise
   ) {
-    val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
-    if (terminal == null) {
-      promise.reject("Exception", "Terminal not found")
-      // if(amount == "-1") {
-      //     generateMockCreditErrorResponse(amount, tip, referenceNumber, promise)
+    val amountRequest = getAmountRequestFromMap(amountRequestMap)
+    makeCashPaymentWithAmountRequest(amountRequest, referenceNumber, testMode, promise)
+  }
 
-      // } else {
-      //     generateMockCreditSuccessResponse(amount, tip, referenceNumber, promise)
-      // }
-      return
-    }
+  override fun makeCashPayment(
+    amount: String?,
+    tip: String?,
+    referenceNumber: String?,
+    testMode: Boolean?,
+    promise: Promise
+  ) {
+    val amountRequest = AmountRequest()
+    amountRequest.transactionAmount = amount
+    amountRequest.tipAmount = tip
+    makeCashPaymentWithAmountRequest(amountRequest, referenceNumber, testMode, promise)
+  }
 
+  override fun voidCreditPaymentWithAmountRequestMap(
+    amountRequestMap: ReadableMap,
+    referenceNumber: String?,
+    testMode: Boolean?,
+    promise: Promise
+  ) {
+    val amountRequest = getAmountRequestFromMap(amountRequestMap)
+
+    val traceRequest = TraceRequest()
+    traceRequest.ecrReferenceNumber = referenceNumber //if (transType in listOf(TransactionType.SALE, TransactionType.VOID_SALE, TransactionType.RETURN)) it else null
+    traceRequest.originalEcrReferenceNumber = referenceNumber //if (transType == TransactionType.VOID_SALE) it else null
+
+    val doCreditRequest = DoCreditRequest()
+    doCreditRequest.transactionType = TransactionType.VOID_SALE
+    doCreditRequest.amountInformation = amountRequest
+    doCreditRequest.traceInformation = traceRequest
+    processCreditRequest(doCreditRequest, testMode, promise)
+  }
+
+  override fun voidCreditPayment(
+    amount: String?,
+    tip: String?,
+    referenceNumber: String?,
+    testMode: Boolean?,
+    promise: Promise
+  ) {
     val amountRequest = AmountRequest()
     amountRequest.transactionAmount = amount
     amountRequest.tipAmount = tip
@@ -261,30 +298,36 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
     doCreditRequest.amountInformation = amountRequest
     doCreditRequest.traceInformation = traceRequest
 
-    val executionResult: ExecutionResult<DoCreditResponse> =
-            terminal.transaction.doCredit(doCreditRequest)
-
-    this.handleCreditExecutionResult(executionResult, promise)
+    processCreditRequest(doCreditRequest, testMode, promise)
   }
 
-  override fun returnCreditPayment( 
-      amount: String?,
-      tip: String?,
-      referenceNumber: String?,
-      promise: Promise
+  override fun returnCreditPaymentWithAmountRequestMap(
+    amountRequestMap: ReadableMap,
+    referenceNumber: String?,
+    testMode: Boolean?,
+    promise: Promise
   ) {
-    val terminal = poslink!!.getTerminal(this.context, this.communicationSetting)
-    if (terminal == null) {
-      promise.reject("Exception", "Terminal not found")
-      // if(amount == "-1") {
-      //     generateMockCreditErrorResponse(amount, tip, referenceNumber, promise)
+    val amountRequest = getAmountRequestFromMap(amountRequestMap)
 
-      // } else {
-      //     generateMockCreditSuccessResponse(amount, tip, referenceNumber, promise)
-      // }
-      return
-    }
+    val traceRequest = TraceRequest()
+    traceRequest.ecrReferenceNumber = referenceNumber //if (transType in listOf(TransactionType.SALE, TransactionType.VOID_SALE, TransactionType.RETURN)) it else null
+    traceRequest.originalEcrReferenceNumber = referenceNumber //if (transType == TransactionType.VOID_SALE) it else null
 
+    val doCreditRequest = DoCreditRequest()
+    doCreditRequest.transactionType = TransactionType.RETURN
+    doCreditRequest.amountInformation = amountRequest
+    doCreditRequest.traceInformation = traceRequest
+
+    processCreditRequest(doCreditRequest, testMode, promise)
+  }
+
+  override fun returnCreditPayment(
+    amount: String?,
+    tip: String?,
+    referenceNumber: String?,
+    testMode: Boolean?,
+    promise: Promise
+  ) {
     val amountRequest = AmountRequest()
     amountRequest.transactionAmount = amount
     amountRequest.tipAmount = tip
@@ -298,10 +341,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
     doCreditRequest.amountInformation = amountRequest
     doCreditRequest.traceInformation = traceRequest
 
-    val executionResult: ExecutionResult<DoCreditResponse> =
-            terminal.transaction.doCredit(doCreditRequest)
-
-    this.handleCreditExecutionResult(executionResult, promise)
+    processCreditRequest(doCreditRequest, testMode, promise)
   }
 
 
@@ -327,6 +367,71 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
     promise.reject("Failed", "Batch close error")
   }
 
+  private fun makeCreditPaymentWithAmountRequest(
+    amountRequest: AmountRequest,
+    referenceNumber: String?,
+    testMode: Boolean?,
+    promise: Promise
+  ) {
+
+    val traceRequest = TraceRequest()
+    traceRequest.ecrReferenceNumber = referenceNumber
+
+    val doCreditRequest = DoCreditRequest()
+    doCreditRequest.transactionType = TransactionType.SALE
+    doCreditRequest.amountInformation = amountRequest
+    doCreditRequest.traceInformation = traceRequest
+
+    processCreditRequest(doCreditRequest, testMode, promise)
+  }
+
+  private fun makeCashPaymentWithAmountRequest(
+    amountRequest: AmountRequest,
+    referenceNumber: String?,
+    testMode: Boolean?,
+    promise: Promise
+  ) {
+    val traceRequest = TraceRequest()
+    traceRequest.ecrReferenceNumber = referenceNumber
+
+    val doCashRequest = DoCashRequest()
+    doCashRequest.transactionType = TransactionType.SALE
+    doCashRequest.amountInformation = amountRequest
+    doCashRequest.traceInformation = traceRequest
+
+    processCashRequest(doCashRequest, testMode, promise)
+  }
+
+  private fun getAmountRequestFromMap(amountRequestMap: ReadableMap): AmountRequest {
+    val amountRequest = AmountRequest()
+
+
+    if(amountRequestMap.hasKey("transactionAmount")) {
+      amountRequest.transactionAmount = amountRequestMap.getString("transactionAmount")
+    }
+    if(amountRequestMap.hasKey("tipAmount")) {
+      amountRequest.tipAmount = amountRequestMap.getString("tipAmount")
+    }
+    if(amountRequestMap.hasKey("cashBackAmount")) {
+      amountRequest.cashBackAmount = amountRequestMap.getString("cashBackAmount")
+    }
+    if(amountRequestMap.hasKey("merchantFee")) {
+      amountRequest.merchantFee = amountRequestMap.getString("merchantFee")
+    }
+    if(amountRequestMap.hasKey("taxAmount")) {
+      amountRequest.taxAmount = amountRequestMap.getString("taxAmount")
+    }
+    if(amountRequestMap.hasKey("serviceFee")) {
+      amountRequest.serviceFee = amountRequestMap.getString("serviceFee")
+    }
+    if(amountRequestMap.hasKey("fuelAmount")) {
+      amountRequest.fuelAmount = amountRequestMap.getString("fuelAmount")
+    }
+    if(amountRequestMap.hasKey("originalAmount")) {
+      amountRequest.originalAmount = amountRequestMap.getString("originalAmount")
+    }
+    return amountRequest;
+  }
 
   private fun generateMockCreditSuccessResponse(
           amount: String?,
@@ -336,7 +441,11 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
   ) {
     val hostInformation = HostInformationResponse()
     val transactionType = TransactionType.SALE;
-    val amountInformation = AmountResponse(amount, "", tip, "0", "0", "0", "0", "0", "0", "0", tip, "0", "0", "0", "0", "0", tip)
+
+    val approvedCashbackAmount = "200"; // 2 dollars
+    val approvedMerchantFee = "500"; // 5 dollars
+
+    val amountInformation = AmountResponse(amount, "", tip, "0", "0", "0", "0", "0", "0", "0", tip, approvedCashbackAmount, approvedMerchantFee, "0", "0", "0", tip)
     val accountInformation = AccountResponse()
     val traceInformation = TraceResponse()
     val avsInformation = AvsResponse()
@@ -355,7 +464,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
     val hostCredentialInformation = HostCredentialResponse()
     val taxDetails =  ArrayList<TaxDetail?>()
     val cofInformation = CofResponse()
-    val hostTraceInformation = HostTraceResponse()
+    val hostTraceInformation = HostTraceResponse(referenceNumber, "", "", "")
 
     val edcType = "test"
     val transactionBehavior = TransactionBehaviorResponse()
@@ -428,7 +537,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
     val torInformation = TorResponse()
     val hostCredentialInformation = HostCredentialResponse()
     val taxDetails = ArrayList<TaxDetail?>()
-    val hostTraceInformation = HostTraceResponse()
+    val hostTraceInformation = HostTraceResponse(referenceNumber, "", "", "")
     val transactionBehavior = TransactionBehaviorResponse()
 
     val doCashResponse = DoCashResponse(hostInformation, transactionType, amountInformation,
