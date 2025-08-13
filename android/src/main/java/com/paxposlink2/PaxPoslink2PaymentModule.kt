@@ -165,10 +165,11 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
   ) {
     if(testMode != null && testMode) {
       val amountRequest = doCreditRequest.amountInformation
+      val traceRequest = doCreditRequest.traceInformation
       if(amountRequest.transactionAmount == "-1") {
-        generateMockCreditErrorResponse(amountRequest.transactionAmount, amountRequest.tipAmount, referenceNumber, promise)
+        generateMockCreditErrorResponse(amountRequest.transactionAmount, amountRequest.tipAmount, traceRequest.ecrReferenceNumber, promise)
       } else {
-        generateMockCreditSuccessResponse(amountRequest.transactionAmount, amountRequest.tipAmount, referenceNumber, promise)
+        generateMockCreditSuccessResponse(amountRequest.transactionAmount, amountRequest.tipAmount, traceRequest.ecrReferenceNumber, promise)
       }
       return
     }
@@ -192,11 +193,12 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
   ) {
     if(testMode != null && testMode) {
       val amountRequest = doCashRequest.amountInformation
+      val traceRequest = doCashRequest.traceInformation
       if(amountRequest.transactionAmount == "-1") {
-        generateMockCashErrorResponse(amountRequest.transactionAmount, amountRequest.tipAmount, referenceNumber, promise)
+        generateMockCashErrorResponse(amountRequest.transactionAmount, amountRequest.tipAmount, traceRequest.ecrReferenceNumber, promise)
 
       } else {
-        generateMockCashSuccessResponse(amountRequest.transactionAmount, amountRequest.tipAmount, referenceNumber, promise)
+        generateMockCashSuccessResponse(amountRequest.transactionAmount, amountRequest.tipAmount, traceRequest.ecrReferenceNumber, promise)
       }
       return
     }
