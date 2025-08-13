@@ -10,16 +10,20 @@ export interface Spec extends TurboModule {
   
   makeCreditPayment(amount: string, tip: string, referenceNumber?: string, testMode?: boolean) : Promise<Map>;
 
-  makeCashPayment(amount: string, tip: string, referenceNumber?: string, testMode?: boolean) : Promise<Map>;
-
   makeCreditPaymentWithAmountRequestMap(amountRequestMap: Object, referenceNumber?: string, testMode?: boolean) : Promise<Map>;
+
+  makeCashPayment(amount: string, tip: string, referenceNumber?: string, testMode?: boolean) : Promise<Map>;
 
   makeCashPaymentWithAmountRequestMap(amountRequestMap: Object, referenceNumber?: string, testMode?: boolean) : Promise<Map>;
 
   voidCreditPayment(amount: string, tip: string, referenceNumber?: string, testMode?: boolean) : Promise<Map>;
 
+  voidCreditPaymentWithAmountRequestMap(amountRequestMap: Object, referenceNumber?: string, testMode?: boolean) : Promise<Map>;
+
   returnCreditPayment(amount: string, tip: string, referenceNumber?: string, testMode?: boolean) : Promise<Map>;
   
+  returnCreditPaymentWithAmountRequestMap(amountRequestMap: Object, referenceNumber?: string, testMode?: boolean) : Promise<Map>;
+
   closeBatch() : Promise<string>;
 }
 
