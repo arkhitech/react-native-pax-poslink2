@@ -313,7 +313,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
 
     val traceRequest = TraceRequest()
     traceRequest.ecrReferenceNumber = referenceNumber //if (transType in listOf(TransactionType.SALE, TransactionType.VOID_SALE, TransactionType.RETURN)) it else null
-    traceRequest.originalEcrReferenceNumber = referenceNumber //if (transType == TransactionType.VOID_SALE) it else null
+    // traceRequest.originalEcrReferenceNumber = referenceNumber //if (transType == TransactionType.VOID_SALE) it else null
 
     val doCreditRequest = DoCreditRequest()
     doCreditRequest.transactionType = TransactionType.RETURN
@@ -336,7 +336,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
 
     val traceRequest = TraceRequest()
     traceRequest.ecrReferenceNumber = referenceNumber //if (transType in listOf(TransactionType.SALE, TransactionType.VOID_SALE, TransactionType.RETURN)) it else null
-    traceRequest.originalEcrReferenceNumber = referenceNumber //if (transType == TransactionType.VOID_SALE) it else null
+    // traceRequest.originalEcrReferenceNumber = referenceNumber //if (transType == TransactionType.VOID_SALE) it else null
 
     val doCreditRequest = DoCreditRequest()
     doCreditRequest.transactionType = TransactionType.RETURN
