@@ -178,7 +178,7 @@ class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
     if (terminal == null) {
       promise.reject("Exception", "Terminal not found")
 
-      return terminal
+      return
     }
     var executionResult: ExecutionResult<DoCreditResponse> =
             terminal.transaction.doCredit(doCreditRequest)
