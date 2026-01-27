@@ -227,7 +227,17 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
 
     var bytes: ByteArray? = null
     if(imageWidth.toInt() > 0 || imageHeight.toInt() > 0) {
-      bytes = bitmap2Byte(bitmap.scale(imageWidth.toInt(), imageHeight.toInt(), false));
+      if(imageWidth.toInt() > 0 && imageHeight.toInt() > 0) {
+        bytes = bitmap2Byte(bitmap.scale(imageWidth.toInt(), imageHeight.toInt(), false));
+      } else if(imageWidth.toInt() > 0) {
+        //scale with width as factor
+        val factor = imageWidth.toInt() / b.width.toFloat()
+        bytes = bitmap2Byte(bitmap.scale(imageWidth.toInt(), (b.height * factor).toInt(), false));
+      } else {
+        //scale with height as factor
+        val factor = imageHeight.toInt() / b.height.toFloat()
+        bytes = bitmap2Byte(bitmap.scale((b.width * factor).toInt(), imageHeight.toInt(), false));
+      }
     } else {
       bytes = bitmap2Byte(bitmap)
     }
