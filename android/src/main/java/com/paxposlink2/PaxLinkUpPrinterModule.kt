@@ -31,17 +31,17 @@ import java.net.URL
 
 class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
   NativePaxLinkUpPrinterSpec(reactContext) {
-  private static val TAG = "PaxLinkUpPrinter"
+  private val TAG = "PaxLinkUpPrinter"
   private val context: Context = reactContext
   private var mPrinterHelper: PrinterHelper? = null
-  private var mLinkDeviceList: List<LinkDevice> = null
+  private var mLinkDeviceList: List<LinkDevice>? = null
   override fun getName(): String {
     return NAME
   }
 
   private fun initLinkDeviceList() {
     try {
-      if (!mPrinterHelper) {
+      if (mPrinterHelper == null) {
         mPrinterHelper = PrinterHelper.getInstance(context)
       }
       mLinkDeviceList = mPrinterHelper!!.queryPrinterInfoList()
@@ -72,7 +72,7 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
 
   override fun getPrinterDeviceList(testMode: Boolean?, promise: Promise) {
     try {
-      if (!mPrinterHelper) {
+      if (mPrinterHelper == null) {
         mPrinterHelper = PrinterHelper.getInstance(context)
       }
       if(testMode != null && testMode) {
@@ -120,7 +120,7 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
       }
       Log.d(TAG, "printer info query done")
       val responseArray = Arguments.createArray();
-      mLinkDeviceList.forEach { linkDevice ->
+      mLinkDeviceList!!.forEach { linkDevice ->
         linkDevice.printerList.forEach { printer ->
           Log.d(
             TAG,
@@ -187,18 +187,18 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
     cutMode: Double,
     testMode: Boolean?,
     promise: Promise) {
-//    if(!mLinkDeviceList) {
+//    if(mLinkDeviceList == null) {
 //      initLinkDeviceList()
 //    }
 //    val printerDevice = mLinkDeviceList.find { linkDevice ->
 //      linkDevice.deviceID == printerDeviceId
 //    }
-//    if(!printerDevice) {
+//    if(printerDevice == null) {
 //      promise.reject("Not found", "Printer Device not found: " + printerDeviceId)
 //      return;
 //    }
 //    val printer = printerDevice.printerList.find { printer ->  printer.componentID == printerComponentId }
-//    if(!printer) {
+//    if(printer == null) {
 //      promise.reject("Not found", "Printer not found: " + printerComponentId)
 //      return;
 //    }
@@ -265,7 +265,7 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
     testMode: Boolean?,
     promise: Promise) {
 
-    var bitmap;
+    var bitmap: Bitmap? = null;
     if (imageUrl.contains("http")) {
       bitmap = getBitmapFromURL(imageUrl)
     } else {
@@ -280,7 +280,7 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
     printBitmap(
       printerDeviceId,
       printerComponentId,
-      bitmap,
+      bitmap!!,
       imageWidth,
       imageHeight,
       cutMode,
@@ -319,7 +319,7 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
     base64Strings: ReadableArray,
     testMode: Boolean?,
     promise: Promise) {
-    if (!mPrinterHelper) {
+    if (mPrinterHelper == null) {
       mPrinterHelper = PrinterHelper.getInstance(context)
     }
 
