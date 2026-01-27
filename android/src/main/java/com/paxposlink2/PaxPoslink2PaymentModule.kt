@@ -59,7 +59,6 @@ import com.pax.poslinksemiintegration.batch.BatchCloseResponse
 class PaxPoslink2PaymentModule(reactContext: ReactApplicationContext) :
         NativePaxPoslink2PaymentSpec(reactContext) {
   private var poslink: POSLinkSemi? = null
-  private val handlerThread: HandlerThread? = null
   private var communicationSetting: CommunicationSetting? = null
   private val context: Context = reactContext
 

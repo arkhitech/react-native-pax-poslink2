@@ -18,6 +18,8 @@ class CalculatorPackage : BaseReactPackage() {
       PaxPoslink2PrinterModule(reactContext)
     } else if(name == PaxPoslink2ScannerModule.NAME) {
       PaxPoslink2ScannerModule(reactContext)
+    } else if(name == PaxLinkUpPrinterModule.NAME) {
+      PaxLinkUpPrinterModule(reactContext)
     } else {
       null
     }
@@ -59,6 +61,14 @@ class CalculatorPackage : BaseReactPackage() {
       PaxPoslink2ScannerModule.NAME to ReactModuleInfo(
         PaxPoslink2ScannerModule.NAME,
         PaxPoslink2ScannerModule.NAME,
+        false, // canOverrideExistingModule
+        false, // needsEagerInit
+        false, // isCxxModule
+        true // isTurboModule
+      ),
+      PaxLinkUpPrinterModule.NAME to ReactModuleInfo(
+        PaxLinkUpPrinterModule.NAME,
+        PaxLinkUpPrinterModule.NAME,
         false, // canOverrideExistingModule
         false, // needsEagerInit
         false, // isCxxModule
