@@ -86,12 +86,6 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
             "t3180"
           )),
           LinkDevice(createTestPrinterDeviceInfo(
-            "T3180 - Front",
-            "t3180-front",
-            "t3180-pcid",
-            "t3180"
-          )),
-          LinkDevice(createTestPrinterDeviceInfo(
             "T3180 - Back",
             "t3180-back",
             "t3180-pcba",
@@ -102,6 +96,12 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
             "t3180-front2",
             "t3180-pcid2",
             "t3180"
+          )),
+          LinkDevice(createTestPrinterDeviceInfo(
+            "T3181 - Back2",
+            "t3181-back2",
+            "t3181-pcba2",
+            "t3181"
           )),
         );
 
