@@ -78,7 +78,9 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
   // implementation files('libs/PAX_POSLinkAndroid_20220818.jar')
-
+  implementation 'com.alibaba:fastjson:1.2.83'
+  implementation 'com.google.code.gson:gson:2.10.1'
+  
   implementation fileTree(dir: 'libs', include: '*.jar')
   //    implementation files('libs/GLComm_V1.10.00_20220421.jar')
   //    implementation files('libs/jsch-0.1.54.jar')

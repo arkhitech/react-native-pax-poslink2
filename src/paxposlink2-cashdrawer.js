@@ -15,6 +15,6 @@ export const getPaxBluetoothPrinterCashBoxStatus = () => (
 );
 
 
-export const openPaxBluetoothPrinter = () => (
+export const openPaxCashDrawer = () => (
   PaxPoslink2CashDrawer.open()
 );
