@@ -3,14 +3,22 @@
 @implementation PaxLinkUpPrinter
 RCT_EXPORT_MODULE()
 
-- (void)getPrinterDeviceList:(boolean)testMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject
-
-- (void)printImageBase64:(NSString*)printerDeviceId printerComponentId: (NSString*)printerComponentId (NSString*)base64Image cutMode:(double)cutMode testMode:(boolean)testMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject
+- (void)getPrinterDeviceList:(BOOL)testMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject
 {
   reject(@"not supported on iOS", @"not supported on iOS", nil);
 }
 
-- (void)printRawCommands:(NSString*)printerDeviceId printerComponentId: (NSString*)printerComponentId base64Strings: (NSArray<NSString*>*)base64Strings testMode:(boolean)testMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject
+- (void)printImageBase64:(NSString*)printerDeviceId printerComponentId:(NSString*)printerComponentId base64Image:(NSString*)base64Image imageWidth:(double)imageWidth imageHeight:(double)imageHeight cutMode:(double)cutMode testMode:(BOOL)testMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject
+{
+  reject(@"not supported on iOS", @"not supported on iOS", nil);
+}
+
+- (void)printImageUrl:(NSString*)printerDeviceId printerComponentId:(NSString*)printerComponentId imageUrl:(NSString*)imageUrl imageWidth:(double)imageWidth imageHeight:(double)imageHeight cutMode:(double)cutMode testMode:(BOOL)testMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject
+{
+  reject(@"not supported on iOS", @"not supported on iOS", nil);
+}
+
+- (void)printRawCommands:(NSString*)printerDeviceId printerComponentId:(NSString*)printerComponentId base64Strings:(NSArray<NSString*>*)base64Strings testMode:(BOOL)testMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject
 {
   reject(@"not supported on iOS", @"not supported on iOS", nil);
 }
