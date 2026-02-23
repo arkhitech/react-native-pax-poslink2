@@ -39,6 +39,11 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
     return NAME
   }
 
+  private data class DecodedImage(
+    val bitmap: Bitmap,
+    val compressFormat: Bitmap.CompressFormat
+  )
+
   private fun initLinkDeviceList() {
     try {
       if (mPrinterHelper == null) {
@@ -144,37 +149,38 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  private fun bitmap2Byte(bm: Bitmap?): ByteArray? {
+  private fun getCompressFormatFromMime(mimeType: String?): Bitmap.CompressFormat {
+    return when (mimeType?.lowercase()) {
+      "image/jpeg", "image/jpg" -> Bitmap.CompressFormat.JPEG
+      else -> Bitmap.CompressFormat.PNG
+    }
+  }
+
+  private fun bitmap2Byte(bm: Bitmap?, compressFormat: Bitmap.CompressFormat): ByteArray? {
     if (bm == null) {
       return null
     }
     val byteArrayOutputStream = ByteArrayOutputStream()
-    bm.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+    bm.compress(compressFormat, 100, byteArrayOutputStream)
     return byteArrayOutputStream.toByteArray()
   }
 
-  private fun getBitmapFromURL(src: String): Bitmap? {
+  private fun getBitmapFromURL(src: String): DecodedImage? {
+    var connection: HttpURLConnection? = null
     try {
       val url = URL(src)
-      val connection = url.openConnection() as HttpURLConnection
+      connection = url.openConnection() as HttpURLConnection
       connection.setDoInput(true)
       connection.connect()
-      val input = connection.getInputStream()
-      val myBitmap = BitmapFactory.decodeStream(input)
-
-      val baos = ByteArrayOutputStream()
-      //            myBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-      //TODO use regex
-      if (src.contains(".jpg")) {
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-      } else {
-        myBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+      val mimeType = connection.contentType
+      connection.inputStream.use { input ->
+        val myBitmap = BitmapFactory.decodeStream(input) ?: return null
+        return DecodedImage(myBitmap, getCompressFormatFromMime(mimeType))
       }
-
-      return myBitmap
     } catch (e: IOException) {
-      // Log exception
       return null
+    } finally {
+      connection?.disconnect()
     }
   }
 
@@ -182,6 +188,7 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
     printerDeviceId: String,
     printerComponentId: String,
     bitmap: Bitmap,
+    compressFormat: Bitmap.CompressFormat,
     imageWidth: Double,
     imageHeight: Double,
     cutMode: Double,
@@ -228,18 +235,18 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
     var bytes: ByteArray? = null
     if(imageWidth.toInt() > 0 || imageHeight.toInt() > 0) {
       if(imageWidth.toInt() > 0 && imageHeight.toInt() > 0) {
-        bytes = bitmap2Byte(bitmap.scale(imageWidth.toInt(), imageHeight.toInt(), false));
+        bytes = bitmap2Byte(bitmap.scale(imageWidth.toInt(), imageHeight.toInt(), false), compressFormat);
       } else if(imageWidth.toInt() > 0) {
         //scale with width as factor
         val factor = imageWidth.toInt() / bitmap.width.toFloat()
-        bytes = bitmap2Byte(bitmap.scale(imageWidth.toInt(), (bitmap.height * factor).toInt(), false));
+        bytes = bitmap2Byte(bitmap.scale(imageWidth.toInt(), (bitmap.height * factor).toInt(), false), compressFormat);
       } else {
         //scale with height as factor
         val factor = imageHeight.toInt() / bitmap.height.toFloat()
-        bytes = bitmap2Byte(bitmap.scale((bitmap.width * factor).toInt(), imageHeight.toInt(), false));
+        bytes = bitmap2Byte(bitmap.scale((bitmap.width * factor).toInt(), imageHeight.toInt(), false), compressFormat);
       }
     } else {
-      bytes = bitmap2Byte(bitmap)
+      bytes = bitmap2Byte(bitmap, compressFormat)
     }
     if (bytes == null) {
       promise.reject("Invalid Image", "Please select a valid image file.")
@@ -275,22 +282,32 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
     testMode: Boolean?,
     promise: Promise) {
 
-    var bitmap: Bitmap? = null;
+    var decodedImage: DecodedImage? = null
     if (imageUrl.contains("http")) {
-      bitmap = getBitmapFromURL(imageUrl)
+      decodedImage = getBitmapFromURL(imageUrl)
     } else {
       try {
-        bitmap =
-          MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(imageUrl))
+        val uri = Uri.parse(imageUrl)
+        val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri) ?: run {
+          promise.reject(TAG, "image not found")
+          return
+        }
+        val mimeType = context.contentResolver.getType(uri)
+        decodedImage = DecodedImage(bitmap, getCompressFormatFromMime(mimeType))
       } catch (e: IOException) {
         promise.reject(TAG, "image not found")
         return
       }
     }
+    if (decodedImage == null) {
+      promise.reject(TAG, "image not found")
+      return
+    }
     printBitmap(
       printerDeviceId,
       printerComponentId,
-      bitmap!!,
+      decodedImage.bitmap,
+      decodedImage.compressFormat,
       imageWidth,
       imageHeight,
       cutMode,
@@ -310,11 +327,18 @@ class PaxLinkUpPrinterModule(reactContext: ReactApplicationContext) :
     promise: Promise) {
 
     val decodedString = Base64.decode(base64Image, Base64.DEFAULT)
+    val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size, options)
     val bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+    if (bitmap == null) {
+      promise.reject(TAG, "invalid base64 image")
+      return
+    }
     printBitmap(
       printerDeviceId,
       printerComponentId,
       bitmap,
+      getCompressFormatFromMime(options.outMimeType),
       imageWidth,
       imageHeight,
       cutMode,
